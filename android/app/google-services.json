@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "360642775830",
+    "project_id": "sample-firebase-ai-app-81139",
+    "storage_bucket": "sample-firebase-ai-app-81139.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:360642775830:android:5720fdfe17e712d9dbde37",
+        "android_client_info": {
+          "package_name": "com.myhr"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAEVr1yX2sNxgaV9AwES5BlmQVNEAjP0f0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
