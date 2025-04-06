@@ -1,8 +1,15 @@
 /* eslint-disable react-native/no-inline-styles */
-import {Dimensions, FlatList, StyleSheet, Text, View} from 'react-native';
+import {
+  Dimensions,
+  FlatList,
+  StatusBar,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import React, {useState} from 'react';
 import {SafeAreaView} from 'react-native';
-// import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
+import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
 
 const MainScreen = ({
   isHomeScreen = false,
@@ -13,25 +20,25 @@ const MainScreen = ({
   headerRight = null,
   title = '',
   headerFloatingView = null,
-  children,
+  children = <></>,
   userDetails = {},
 }) => {
-  //   const [index, setIndex] = useState(0);
-  //   const routes = headerFloatingView
-  //     ? headerFloatingView?.map((tab, i) => ({
-  //         key: `tab-${i}`,
-  //         title: tab?.tabName,
-  //       }))
-  //     : [];
+  const [index, setIndex] = useState(0);
+  const routes = headerFloatingView
+    ? headerFloatingView?.map((tab, i) => ({
+        key: `tab-${i}`,
+        title: tab?.tabName,
+      }))
+    : [];
 
-  //   const renderScene = headerFloatingView?.length
-  //     ? SceneMap(
-  //         headerFloatingView?.reduce((acc, tab, i) => {
-  //           acc[`tab-${i}`] = tab?.components;
-  //           return acc;
-  //         }, {}),
-  //       )
-  //     : null;
+  const renderScene = headerFloatingView?.length
+    ? SceneMap(
+        headerFloatingView?.reduce((acc, tab, i) => {
+          acc[`tab-${i}`] = tab.components;
+          return acc;
+        }, {}),
+      )
+    : null;
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
@@ -50,7 +57,7 @@ const MainScreen = ({
                 style={[styles.headerLeft, {flex: isHomeScreen ? 0.5 : 0.15}]}>
                 {isHomeScreen ? (
                   <View>
-                    <Text style={styles.welcomeText}>Welcome !</Text>
+                    <Text style={styles.welcomeText}>Welcome</Text>
                     <Text style={styles.userName}>
                       {userDetails?.email?.split('@')[0]}
                     </Text>
@@ -73,7 +80,7 @@ const MainScreen = ({
             )}
           </View>
         )}
-        {/* {headerFloatingView && (
+        {headerFloatingView && (
           <View style={{flex: 1}}>
             <TabView
               style={styles.tabsViewStyle}
@@ -96,14 +103,16 @@ const MainScreen = ({
               }}
             />
           </View>
-        )} */}
-        <View style={styles.mainContent}>
-          <FlatList
-            renderItem={() => children}
-            nestedScrollEnabled
-            data={['']}
-          />
-        </View>
+        )}
+        {!headerFloatingView && (
+          <View style={styles.mainContent}>
+            <FlatList
+              renderItem={() => children}
+              nestedScrollEnabled
+              data={['']}
+            />
+          </View>
+        )}
       </View>
     </SafeAreaView>
   );
@@ -114,6 +123,7 @@ export default MainScreen;
 const styles = StyleSheet.create({
   safeAreaView: {
     flex: 1,
+    marginTop: StatusBar.currentHeight,
   },
   mainContainer: {
     flex: 1,
@@ -162,16 +172,15 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   tabsViewStyle: {
-    borderBottomLeftRadius: 8,
-    borderBottomRightRadius: 8,
-    backgroundColor: '#333',
     height: '100%',
   },
   tabsContainer: {
-    // marginHorizontal: 16,
     backgroundColor: '#333',
     borderTopWidth: 1,
     borderTopColor: '#d1d1d1',
+    borderBottomLeftRadius: 8,
+    borderBottomRightRadius: 8,
+    overflow: 'hidden',
   },
   indicatorStyle: {
     backgroundColor: 'white',
@@ -182,7 +191,5 @@ const styles = StyleSheet.create({
   },
   mainContent: {
     flex: 1,
-    padding: 16,
-    paddingBottom: 0,
   },
 });

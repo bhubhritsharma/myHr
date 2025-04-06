@@ -4,11 +4,13 @@ import {
   TextInput,
   StyleSheet,
   Text,
-  TouchableOpacity,
   Dimensions,
+  StatusBar,
 } from 'react-native';
 import auth from '@react-native-firebase/auth';
 import {StackActions, useNavigation} from '@react-navigation/native';
+import MainScreen from '../components/MainScreen';
+import MyButton from '../components/MyButton';
 
 const window = Dimensions.get('window');
 
@@ -45,36 +47,44 @@ function LoginScreen() {
   };
 
   return (
-    <View style={styles.mainContainer}>
-      <Text style={styles.heading}>Login</Text>
-      <View style={styles.container}>
-        <TextInput
-          style={styles.inputField}
-          placeholder="Email"
-          value={email}
-          onChangeText={setEmail}
-        />
-        <TextInput
-          placeholder="Password"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-          style={styles.inputField}
-        />
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity onPress={handleLogin} style={styles.button}>
-            <Text style={styles.buttonText}>Login</Text>
-          </TouchableOpacity>
+    <MainScreen title={'Login'}>
+      <View style={styles.mainContainer}>
+        <Text style={styles.heading}>Login with your email.</Text>
+        <View style={styles.container}>
+          <TextInput
+            style={styles.inputField}
+            placeholder="Enter Email"
+            value={email}
+            onChangeText={setEmail}
+            placeholderTextColor={'white'}
+          />
+          <TextInput
+            placeholder="Enter Password"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry
+            style={styles.inputField}
+            placeholderTextColor={'white'}
+          />
+          <View style={styles.buttonContainer}>
+            <MyButton
+              title={'Login'}
+              onPress={handleLogin}
+              buttonContainerStyle={styles.buttonContainerStyle}
+            />
+          </View>
+          {message && <Text style={styles.error}>{message}</Text>}
         </View>
-        {message && <Text style={styles.error}>{message}</Text>}
+        <View style={styles.signUp}>
+          <Text>Do not have an account ?</Text>
+          <MyButton
+            title={'SignUp'}
+            buttonType="secondary"
+            onPress={() => navigation.navigate('SignUp')}
+          />
+        </View>
       </View>
-      <View style={styles.signUp}>
-        <Text>Do not have an account ?</Text>
-        <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
-          <Text style={styles.signUpButton}>SignUp</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+    </MainScreen>
   );
 }
 
@@ -82,9 +92,9 @@ export default LoginScreen;
 
 const styles = StyleSheet.create({
   mainContainer: {
-    padding: 20,
-    marginVertical: 'auto',
-    height: window.height,
+    height: window.height - StatusBar.currentHeight - 55,
+    padding: 16,
+    paddingBottom: 0,
   },
   heading: {
     fontSize: 20,
@@ -108,6 +118,10 @@ const styles = StyleSheet.create({
     borderColor: '#d1d1d1',
     borderRadius: 4,
     color: '#fff',
+    paddingHorizontal: 10,
+  },
+  buttonContainerStyle: {
+    flex: 1,
   },
   buttonContainer: {
     flexDirection: 'row',
@@ -137,6 +151,7 @@ const styles = StyleSheet.create({
     marginBottom: 0,
     marginTop: 'auto',
     flexDirection: 'row',
+    alignItems: 'center',
     gap: 20,
     justifyContent: 'center',
   },

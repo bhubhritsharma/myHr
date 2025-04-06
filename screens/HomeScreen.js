@@ -1,9 +1,10 @@
+/* eslint-disable react/no-unstable-nested-components */
 import React from 'react';
 import Auth from '@react-native-firebase/auth';
 import {StackActions, useNavigation} from '@react-navigation/native';
 import MainScreen from '../components/MainScreen';
 import MyButton from '../components/MyButton';
-import {Text} from 'react-native';
+import {ScrollView, StyleSheet, Text} from 'react-native';
 
 const HomeScreen = () => {
   const navigation = useNavigation();
@@ -17,6 +18,18 @@ const HomeScreen = () => {
     }
   };
 
+  const DashboardTab = () => (
+    <ScrollView contentContainerStyle={styles.contentContainerStyle}>
+      <Text>Dashboard Content</Text>
+    </ScrollView>
+  );
+
+  const ProfileTab = () => (
+    <ScrollView contentContainerStyle={styles.contentContainerStyle}>
+      <Text>Profile Content</Text>
+    </ScrollView>
+  );
+
   return (
     <MainScreen
       isHomeScreen={true}
@@ -25,36 +38,21 @@ const HomeScreen = () => {
       headerFloatingView={[
         {
           tabName: 'Dashboard',
-          components: () => {
-            <Text>123</Text>;
-          },
+          components: DashboardTab,
         },
         {
           tabName: 'Profile',
-          components: () => {
-            <Text>112233</Text>;
-          },
+          components: ProfileTab,
         },
-      ]}>
-      <></>
-    </MainScreen>
+      ]}
+    />
   );
 };
 
 export default HomeScreen;
 
-// const styles = StyleSheet.create({
-//   container: {
-//     width: '100%',
-//     borderWidth: 1,
-//     borderColor: '#d1d1d1',
-//     backgroundColor: '#333',
-//     padding: 10,
-//     margin: 'auto',
-//     borderRadius: 8,
-//   },
-//   button: {
-//     marginBottom: 0,
-//     marginTop: 'auto',
-//   },
-// });
+const styles = StyleSheet.create({
+  contentContainerStyle: {
+    padding: 16,
+  },
+});
