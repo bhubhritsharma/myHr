@@ -9,6 +9,7 @@ import MyButton from '../components/MyButton';
 import { FlatList, StyleSheet, View } from 'react-native';
 import SectionHeading from '../components/SectionHeading';
 import CategoryCard from '../components/CategoryCard';
+import BlogCard from '../components/BlogCard';
 
 const categoriesData = [
   {
@@ -35,6 +36,21 @@ const categoriesData = [
     id: '5',
     title: 'Category 5',
     url: '',
+  },
+];
+
+const blogsData = [
+  {
+    id: '11',
+    title: 'Kareri Lake',
+    url: '',
+    description: 'lorem Ipsum',
+  },
+  {
+    id: '12',
+    title: 'Parashar Lake',
+    url: '',
+    description: 'lorem Ipsum',
   },
 ];
 
@@ -66,6 +82,10 @@ const HomeScreen = () => {
     return <CategoryCard categoryTitle={item?.title} />;
   };
 
+  const renderBlogCard = (item) => {
+    return <BlogCard item={item} />;
+  };
+
   return (
     <MainScreen
       isHomeScreen={true}
@@ -93,6 +113,16 @@ const HomeScreen = () => {
             renderItem={({ item, index }) => renderCategoryCard(item)}
           />
         </View>
+        <View style={styles.sectionContainer}>
+          <SectionHeading heading="Blogs" />
+          <FlatList
+            horizontal
+            scrollEnabled
+            ItemSeparatorComponent={<View style={{ width: 12, height: '100%' }} />}
+            data={blogsData}
+            renderItem={({ item, index }) => renderBlogCard(item)}
+          />
+        </View>
       </View>
     </MainScreen>
   );
@@ -108,5 +138,6 @@ const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 8,
     backgroundColor: 'white',
+    marginBottom: 16,
   },
 });
