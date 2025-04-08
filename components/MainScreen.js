@@ -42,6 +42,7 @@ const MainScreen = ({
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
+      <StatusBar backgroundColor={'#333'} barStyle={'light-content'}/>
       <View style={styles.mainContainer}>
         {showHeader && (
           <View
@@ -123,7 +124,7 @@ export default MainScreen;
 const styles = StyleSheet.create({
   safeAreaView: {
     flex: 1,
-    marginTop: StatusBar.currentHeight,
+    // marginTop: StatusBar.currentHeight,
   },
   mainContainer: {
     flex: 1,
