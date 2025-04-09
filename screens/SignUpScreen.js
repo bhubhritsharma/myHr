@@ -1,6 +1,7 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   Dimensions,
+  StatusBar,
   StyleSheet,
   Text,
   TextInput,
@@ -8,7 +9,9 @@ import {
   View,
 } from 'react-native';
 import auth from '@react-native-firebase/auth';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
+import MainScreen from '../components/MainScreen';
+import MyButton from '../components/MyButton';
 
 const window = Dimensions.get('window');
 
@@ -39,36 +42,40 @@ const SignUpScreen = () => {
   };
 
   return (
-    <View style={styles.mainContainer}>
-      <Text style={styles.heading}>Sign Up</Text>
-      <View style={styles.container}>
-        <TextInput
-          style={styles.inputField}
-          placeholder="Email"
-          value={email}
-          onChangeText={setEmail}
-        />
-        <TextInput
-          placeholder="Password"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-          style={styles.inputField}
-        />
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity onPress={handleSignUp} style={styles.button}>
-            <Text style={styles.buttonText}>Sign Up</Text>
-          </TouchableOpacity>
+    <MainScreen title={'Sign Up'}>
+      <View style={styles.mainContainer}>
+        <Text style={styles.heading}>SignUp with your email.</Text>
+        <View style={styles.container}>
+          <TextInput
+            style={styles.inputField}
+            placeholder="Email"
+            value={email}
+            onChangeText={setEmail}
+          />
+          <TextInput
+            placeholder="Password"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry
+            style={styles.inputField}
+          />
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity onPress={handleSignUp} style={styles.button}>
+              <Text style={styles.buttonText}>Sign Up</Text>
+            </TouchableOpacity>
+          </View>
+          {message && <Text style={styles.error}>{message}</Text>}
         </View>
-        {message && <Text style={styles.error}>{message}</Text>}
+        <View style={styles.signUp}>
+          <Text>Already have an account ?</Text>
+          <MyButton
+            title={'Login'}
+            buttonType="secondary"
+            onPress={() => navigation.navigate('Login')}
+          />
+        </View>
       </View>
-      <View style={styles.signUp}>
-        <Text>Already have an account ?</Text>
-        <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-          <Text style={styles.signUpButton}>Login</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+    </MainScreen>
   );
 };
 
@@ -76,9 +83,9 @@ export default SignUpScreen;
 
 const styles = StyleSheet.create({
   mainContainer: {
-    padding: 20,
-    marginVertical: 'auto',
-    height: window.height,
+    padding: 16,
+    paddingBottom: 0,
+    height: window.height - StatusBar.currentHeight - 16,
   },
   heading: {
     fontSize: 20,
@@ -128,11 +135,12 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   signUp: {
-    marginBottom: 0,
+    marginBottom: 10,
     marginTop: 'auto',
     flexDirection: 'row',
     gap: 20,
     justifyContent: 'center',
+    alignItems: 'center',
   },
   signUpButton: {
     color: 'blue',
