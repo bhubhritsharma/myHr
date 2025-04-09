@@ -83,7 +83,7 @@ const HomeScreen = () => {
   };
 
   const renderBlogCard = (item) => {
-    return <BlogCard item={item} />;
+    return <BlogCard item={item} onPress={()=>{navigation.navigate('Categories')}}/>;
   };
 
   return (

@@ -92,7 +92,7 @@ export default LoginScreen;
 
 const styles = StyleSheet.create({
   mainContainer: {
-    height: window.height - StatusBar.currentHeight - 55,
+    height: window.height - StatusBar.currentHeight - 16,
     padding: 16,
     paddingBottom: 0,
   },
@@ -148,7 +148,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   signUp: {
-    marginBottom: 0,
+    marginBottom: 10,
     marginTop: 'auto',
     flexDirection: 'row',
     alignItems: 'center',
