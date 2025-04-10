@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import Auth from '@react-native-firebase/auth';
+import {getAuth, onAuthStateChanged} from '@react-native-firebase/auth';
 import {StackActions, useNavigation} from '@react-navigation/native';
 
 const SplashScreen = () => {
@@ -7,7 +7,7 @@ const SplashScreen = () => {
 
   useEffect(() => {
     setTimeout(() => {
-      Auth().onAuthStateChanged(user => {
+      onAuthStateChanged(getAuth(), user => {
         const routeName = user !== null ? 'Home' : 'Login';
         navigation.dispatch(StackActions.replace(routeName));
       });

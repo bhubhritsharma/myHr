@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
   Dimensions,
   StatusBar,
@@ -8,8 +8,11 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import auth from '@react-native-firebase/auth';
-import { useNavigation } from '@react-navigation/native';
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+} from '@react-native-firebase/auth';
+import {useNavigation} from '@react-navigation/native';
 import MainScreen from '../components/MainScreen';
 import MyButton from '../components/MyButton';
 
@@ -25,7 +28,8 @@ const SignUpScreen = () => {
   const handleSignUp = async () => {
     try {
       if (email.length > 0 && password.length > 0) {
-        const isUserCreated = await auth().createUserWithEmailAndPassword(
+        const isUserCreated = await createUserWithEmailAndPassword(
+          getAuth(),
           email,
           password,
         );
@@ -51,6 +55,7 @@ const SignUpScreen = () => {
             placeholder="Email"
             value={email}
             onChangeText={setEmail}
+            placeholderTextColor={'white'}
           />
           <TextInput
             placeholder="Password"
@@ -58,6 +63,7 @@ const SignUpScreen = () => {
             onChangeText={setPassword}
             secureTextEntry
             style={styles.inputField}
+            placeholderTextColor={'white'}
           />
           <View style={styles.buttonContainer}>
             <TouchableOpacity onPress={handleSignUp} style={styles.button}>
@@ -72,6 +78,7 @@ const SignUpScreen = () => {
             title={'Login'}
             buttonType="secondary"
             onPress={() => navigation.navigate('Login')}
+            buttonContainerStyle={styles.secondaryButtonContainerStyle}
           />
         </View>
       </View>
@@ -85,7 +92,7 @@ const styles = StyleSheet.create({
   mainContainer: {
     padding: 16,
     paddingBottom: 0,
-    height: window.height - StatusBar.currentHeight - 16,
+    height: window.height - StatusBar.currentHeight - 31,
   },
   heading: {
     fontSize: 20,
@@ -138,11 +145,11 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     marginTop: 'auto',
     flexDirection: 'row',
-    gap: 20,
+    gap: 10,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  signUpButton: {
-    color: 'blue',
+  secondaryButtonContainerStyle: {
+    padding: 6,
   },
 });

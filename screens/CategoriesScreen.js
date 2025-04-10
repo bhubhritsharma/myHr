@@ -1,9 +1,8 @@
-import { Text, View } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import {Text, View} from 'react-native';
+import React, {useEffect, useState} from 'react';
 import firestore from '@react-native-firebase/firestore';
 
 const CategoriesScreen = () => {
-
   const [blogsData, setBlogsData] = useState(null);
 
   useEffect(() => {
@@ -16,7 +15,7 @@ const CategoriesScreen = () => {
       console.log(data, 'data');
       setBlogsData(data);
     } catch (err) {
-      console.log(err);
+      console.log(err, 'categories screen error');
     }
   };
 
@@ -31,15 +30,13 @@ const CategoriesScreen = () => {
 
   // addData();
 
-  return (
-    blogsData.docs.map(e => {
-      return (
-        <View>
-          <Text>Name: {e._data?.name}</Text>
-        </View>
-      );
-    })
-  );
+  return blogsData?.docs.map(e => {
+    return (
+      <View>
+        <Text>Name: {e._data?.name}</Text>
+      </View>
+    );
+  });
 };
 
 export default CategoriesScreen;

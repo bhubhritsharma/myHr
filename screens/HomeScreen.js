@@ -1,43 +1,19 @@
 /* eslint-disable react-native/no-inline-styles */
 // /* eslint-disable react/no-unstable-nested-components */
-import React from 'react';
-import Auth from '@react-native-firebase/auth';
-import { StackActions, useNavigation } from '@react-navigation/native';
+import React, {useEffect, useState} from 'react';
+import {getAuth} from '@react-native-firebase/auth';
+import {StackActions, useNavigation} from '@react-navigation/native';
 import MainScreen from '../components/MainScreen';
 import MyButton from '../components/MyButton';
-// import {ScrollView} from 'react-native';
-import { FlatList, StyleSheet, View } from 'react-native';
+import {FlatList, StyleSheet, View} from 'react-native';
 import SectionHeading from '../components/SectionHeading';
 import CategoryCard from '../components/CategoryCard';
 import BlogCard from '../components/BlogCard';
-
-const categoriesData = [
-  {
-    id: '1',
-    title: 'Category 1',
-    url: '',
-  },
-  {
-    id: '2',
-    title: 'Category 2',
-    url: '',
-  },
-  {
-    id: '3',
-    title: 'Category 3',
-    url: '',
-  },
-  {
-    id: '4',
-    title: 'Category 4',
-    url: '',
-  },
-  {
-    id: '5',
-    title: 'Category 5',
-    url: '',
-  },
-];
+import {
+  getFirestore,
+  collection,
+  getDocs,
+} from '@react-native-firebase/firestore';
 
 const blogsData = [
   {
@@ -54,12 +30,34 @@ const blogsData = [
   },
 ];
 
+const db = getFirestore();
+
 const HomeScreen = () => {
   const navigation = useNavigation();
+  const [categoriesData, setCategoriesData] = useState(null);
+
+  useEffect(() => {
+    getCategoriesData();
+  }, []);
+
+  const getCategoriesData = async () => {
+    try {
+      const snapshot = await getDocs(collection(db, 'categories'));
+      const formattedCategoriesData = snapshot?._docs?.map(item => {
+        return {
+          id: item?.id,
+          ...item?._data,
+        };
+      });
+      setCategoriesData(formattedCategoriesData);
+    } catch (error) {
+      console.log(error, 'failed to fetch categories data');
+    }
+  };
 
   const handleSignOut = async () => {
     try {
-      await Auth().signOut();
+      await getAuth().signOut();
       navigation.navigate(StackActions.popToTop());
     } catch (error) {
       console.error(error);
@@ -78,29 +76,36 @@ const HomeScreen = () => {
   //   </ScrollView>
   // );
 
-  const renderCategoryCard = (item) => {
-    return <CategoryCard categoryTitle={item?.title} />;
+  const renderCategoryCard = item => {
+    return <CategoryCard item={item} length={categoriesData?.length} />;
   };
 
-  const renderBlogCard = (item) => {
-    return <BlogCard item={item} onPress={()=>{navigation.navigate('Categories')}}/>;
+  const renderBlogCard = item => {
+    return (
+      <BlogCard
+        item={item}
+        onPress={() => {
+          navigation.navigate('Categories');
+        }}
+      />
+    );
   };
 
   return (
     <MainScreen
       isHomeScreen={true}
-      userDetails={Auth()?.currentUser}
+      userDetails={getAuth()?.currentUser}
       headerRight={<MyButton title="Sign Out" onPress={handleSignOut} />}
-    // headerFloatingView={[
-    //   {
-    //     tabName: 'Dashboard',
-    //     components: DashboardTab,
-    //   },
-    //   {
-    //     tabName: 'Profile',
-    //     components: ProfileTab,
-    //   },
-    // ]}
+      // headerFloatingView={[
+      //   {
+      //     tabName: 'Dashboard',
+      //     components: DashboardTab,
+      //   },
+      //   {
+      //     tabName: 'Profile',
+      //     components: ProfileTab,
+      //   },
+      // ]}
     >
       <View style={styles.contentContainerStyle}>
         <View style={styles.sectionContainer}>
@@ -108,9 +113,11 @@ const HomeScreen = () => {
           <FlatList
             horizontal
             scrollEnabled
-            ItemSeparatorComponent={<View style={{ width: 12, height: '100%' }} />}
+            ItemSeparatorComponent={
+              <View style={{width: 12, height: '100%'}} />
+            }
             data={categoriesData}
-            renderItem={({ item, index }) => renderCategoryCard(item)}
+            renderItem={({item, index}) => renderCategoryCard(item)}
           />
         </View>
         <View style={styles.sectionContainer}>
@@ -118,9 +125,22 @@ const HomeScreen = () => {
           <FlatList
             horizontal
             scrollEnabled
-            ItemSeparatorComponent={<View style={{ width: 12, height: '100%' }} />}
+            ItemSeparatorComponent={
+              <View style={{width: 12, height: '100%'}} />
+            }
             data={blogsData}
-            renderItem={({ item, index }) => renderBlogCard(item)}
+            renderItem={({item, index}) => renderBlogCard(item)}
+          />
+        </View>
+        <View style={styles.sectionContainer}>
+          <SectionHeading
+            heading="Want to share your experience ???"
+            smallHeading="Write it here..."
+          />
+          <MyButton
+            title="Write a Blog"
+            buttonType="primary"
+            onPress={() => navigation.navigate('Write Blog')}
           />
         </View>
       </View>

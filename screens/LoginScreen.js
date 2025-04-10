@@ -7,7 +7,7 @@ import {
   Dimensions,
   StatusBar,
 } from 'react-native';
-import auth from '@react-native-firebase/auth';
+import {getAuth, signInWithEmailAndPassword} from '@react-native-firebase/auth';
 import {StackActions, useNavigation} from '@react-navigation/native';
 import MainScreen from '../components/MainScreen';
 import MyButton from '../components/MyButton';
@@ -24,7 +24,8 @@ function LoginScreen() {
   const handleLogin = async () => {
     try {
       if (email.length > 0 && password.length > 0) {
-        const isUserLoggedIn = await auth().signInWithEmailAndPassword(
+        const isUserLoggedIn = await signInWithEmailAndPassword(
+          getAuth(),
           email,
           password,
         );
@@ -81,6 +82,7 @@ function LoginScreen() {
             title={'SignUp'}
             buttonType="secondary"
             onPress={() => navigation.navigate('SignUp')}
+            buttonContainerStyle={styles.secondaryButtonContainerStyle}
           />
         </View>
       </View>
@@ -92,7 +94,7 @@ export default LoginScreen;
 
 const styles = StyleSheet.create({
   mainContainer: {
-    height: window.height - StatusBar.currentHeight - 16,
+    height: window.height - StatusBar.currentHeight - 31,
     padding: 16,
     paddingBottom: 0,
   },
@@ -152,10 +154,10 @@ const styles = StyleSheet.create({
     marginTop: 'auto',
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 20,
+    gap: 10,
     justifyContent: 'center',
   },
-  signUpButton: {
-    color: 'blue',
+  secondaryButtonContainerStyle: {
+    padding: 6,
   },
 });
