@@ -1,11 +1,15 @@
 /* eslint-disable react-native/no-inline-styles */
 // /* eslint-disable react/no-unstable-nested-components */
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {getAuth} from '@react-native-firebase/auth';
-import {StackActions, useNavigation} from '@react-navigation/native';
+import {
+  StackActions,
+  useFocusEffect,
+  useNavigation,
+} from '@react-navigation/native';
 import MainScreen from '../components/MainScreen';
 import MyButton from '../components/MyButton';
-import {FlatList, StyleSheet, View} from 'react-native';
+import {FlatList, View} from 'react-native';
 import SectionHeading from '../components/SectionHeading';
 import CategoryCard from '../components/CategoryCard';
 import BlogCard from '../components/BlogCard';
@@ -14,31 +18,21 @@ import {
   collection,
   getDocs,
 } from '@react-native-firebase/firestore';
-
-const blogsData = [
-  {
-    id: '11',
-    title: 'Kareri Lake',
-    url: '',
-    description: 'lorem Ipsum',
-  },
-  {
-    id: '12',
-    title: 'Parashar Lake',
-    url: '',
-    description: 'lorem Ipsum',
-  },
-];
+import {globalStyle} from '../utils/styles';
 
 const db = getFirestore();
 
 const HomeScreen = () => {
   const navigation = useNavigation();
   const [categoriesData, setCategoriesData] = useState(null);
+  const [blogsData, setBlogsData] = useState(null);
 
-  useEffect(() => {
-    getCategoriesData();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      getCategoriesData();
+      getBlogsData();
+    }, []),
+  );
 
   const getCategoriesData = async () => {
     try {
@@ -50,6 +44,21 @@ const HomeScreen = () => {
         };
       });
       setCategoriesData(formattedCategoriesData);
+    } catch (error) {
+      console.log(error, 'failed to fetch categories data');
+    }
+  };
+
+  const getBlogsData = async () => {
+    try {
+      const snapshot = await getDocs(collection(db, 'blogs'));
+      const formattedBlogsData = snapshot?._docs?.map(item => {
+        return {
+          id: item?.id,
+          ...item?._data,
+        };
+      });
+      setBlogsData(formattedBlogsData);
     } catch (error) {
       console.log(error, 'failed to fetch categories data');
     }
@@ -81,21 +90,20 @@ const HomeScreen = () => {
   };
 
   const renderBlogCard = item => {
-    return (
-      <BlogCard
-        item={item}
-        onPress={() => {
-          navigation.navigate('Categories');
-        }}
-      />
-    );
+    return <BlogCard item={item} />;
   };
 
   return (
     <MainScreen
       isHomeScreen={true}
       userDetails={getAuth()?.currentUser}
-      headerRight={<MyButton title="Sign Out" onPress={handleSignOut} />}
+      headerRight={
+        <MyButton
+          title="Sign Out"
+          onPress={handleSignOut}
+          isSignOutBtn={true}
+        />
+      }
       // headerFloatingView={[
       //   {
       //     tabName: 'Dashboard',
@@ -107,8 +115,8 @@ const HomeScreen = () => {
       //   },
       // ]}
     >
-      <View style={styles.contentContainerStyle}>
-        <View style={styles.sectionContainer}>
+      <View style={globalStyle.contentContainerStyle}>
+        <View style={globalStyle.sectionContainer}>
           <SectionHeading heading="Categories" />
           <FlatList
             horizontal
@@ -120,7 +128,7 @@ const HomeScreen = () => {
             renderItem={({item, index}) => renderCategoryCard(item)}
           />
         </View>
-        <View style={styles.sectionContainer}>
+        <View style={globalStyle.sectionContainer}>
           <SectionHeading heading="Blogs" />
           <FlatList
             horizontal
@@ -132,7 +140,7 @@ const HomeScreen = () => {
             renderItem={({item, index}) => renderBlogCard(item)}
           />
         </View>
-        <View style={styles.sectionContainer}>
+        <View style={globalStyle.sectionContainer}>
           <SectionHeading
             heading="Want to share your experience ???"
             smallHeading="Write it here..."
@@ -149,15 +157,3 @@ const HomeScreen = () => {
 };
 
 export default HomeScreen;
-
-const styles = StyleSheet.create({
-  contentContainerStyle: {
-    padding: 16,
-  },
-  sectionContainer: {
-    padding: 12,
-    borderRadius: 8,
-    backgroundColor: 'white',
-    marginBottom: 16,
-  },
-});

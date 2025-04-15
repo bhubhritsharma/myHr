@@ -1,3 +1,4 @@
+import {useNavigation} from '@react-navigation/native';
 import React from 'react';
 import {
   Dimensions,
@@ -16,6 +17,7 @@ const CategoryCard = ({
   item = {},
   length = 4,
 }) => {
+  const navigation = useNavigation();
   const getCardWidth = () => {
     if (length > 2 && length <= 4) {
       return {
@@ -27,7 +29,9 @@ const CategoryCard = ({
   };
 
   return (
-    <TouchableOpacity onPress={onPress} key={item?.id}>
+    <TouchableOpacity
+      onPress={() => navigation.navigate('Category Blogs', {categoryId: item?.id})}
+      key={item?.id}>
       <View style={[styles.cardContainer, cardContainerStyle, getCardWidth()]}>
         <Image style={styles.imageStyle} src={item?.imageUrl} />
         <Text style={styles.label}>{item?.name}</Text>

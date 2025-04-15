@@ -7,13 +7,18 @@ const MyButton = ({
   buttonContainerStyle = {},
   buttonTextStyle = {},
   buttonType = 'primary',
+  isSignOutBtn = false,
 }) => {
   return (
     <TouchableOpacity
       onPress={onPress}
       style={[
         buttonContainerStyle,
-        buttonType === 'primary' ? styles.containerStyle1 : styles.containerStyle2,
+        isSignOutBtn
+          ? styles.signOutBtn
+          : buttonType === 'primary'
+          ? styles.containerStyle1
+          : styles.containerStyle2,
       ]}>
       <Text style={[buttonTextStyle, styles.textStyle]}>{title}</Text>
     </TouchableOpacity>
@@ -23,9 +28,19 @@ const MyButton = ({
 export default MyButton;
 
 const styles = StyleSheet.create({
-  containerStyle1: {
+  signOutBtn: {
     paddingHorizontal: 15,
     height: 32,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    textAlign: 'center',
+    backgroundColor: '#d1d1d1',
+    borderRadius: 4,
+  },
+  containerStyle1: {
+    paddingHorizontal: 15,
+    height: 45,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',

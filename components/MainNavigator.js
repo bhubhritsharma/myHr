@@ -7,8 +7,9 @@ import LoginScreen from '../screens/LoginScreen';
 import Home from '../screens/HomeScreen';
 import SignUpScreen from '../screens/SignUpScreen';
 import SplashScreen from '../screens/SplashScreen';
-import CategoriesScreen from '../screens/CategoriesScreen';
+import BlogDetail from '../screens/BlogDetail';
 import WriteBlogScreen from '../screens/WriteBlogScreen';
+import CategoryBlogs from '../screens/CategoryBlogs';
 
 const Stack = createNativeStackNavigator();
 
@@ -37,13 +38,18 @@ const MainNavigator = () => {
           options={{headerShown: false}}
         />
         <Stack.Screen
-          name="Categories"
-          component={CategoriesScreen}
+          name="Blog Details"
+          component={BlogDetail}
           options={{headerShown: false}}
         />
         <Stack.Screen
           name="Write Blog"
           component={WriteBlogScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Category Blogs"
+          component={CategoryBlogs}
           options={{headerShown: false}}
         />
       </Stack.Navigator>

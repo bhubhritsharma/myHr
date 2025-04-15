@@ -1,62 +1,72 @@
-import { Dimensions, Image, StyleSheet, Text, View } from 'react-native';
-import React, { useState } from 'react';
-import MyButton from './MyButton';
+import {
+  Dimensions,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import React from 'react';
+import {addDot} from '../utils/methods';
+import {Colors, FontSize, Weight} from '../utils/styles';
+import {useNavigation} from '@react-navigation/native';
 
 const window = Dimensions.get('window');
 
-const BlogCard = ({ onPress = () => { }, cardContainerStyle = {}, item = {} }) => {
-    const [bottom, setBottom] = useState(0);
+const BlogCard = ({cardContainerStyle = {}, item = {}}) => {
+  const navigation = useNavigation();
 
-    const handleLayout = (event) => {
-        setBottom(event.nativeEvent.layout.height);
-    };
-
-    return (
-        <View style={[styles.cardContainer, cardContainerStyle]}>
-            <Image style={styles.imageStyle} src={item?.url} />
-            <View style={[styles.blogContent, { bottom: bottom - 4 }]} onLayout={handleLayout}>
-                <Text style={styles.label}>{item?.title}</Text>
-                <Text style={styles.description}>{item?.description}</Text>
-            </View>
-            <MyButton title={'View Blog'} buttonContainerStyle={styles.buttonContainerStyle} onPress={onPress}/>
+  return (
+    <TouchableOpacity
+      onPress={() => navigation.navigate('Blog Details', {id: item?.id})}>
+      <View style={[styles.cardContainer, cardContainerStyle]}>
+        <View style={styles.cardContainerInner}>
+          <Image style={styles.imageStyle} src={item?.url} />
+          <View style={[styles.blogContent]}>
+            <Text style={styles.label}>{item?.title}</Text>
+            <Text style={styles.description}>{addDot(item?.content, 80)}</Text>
+          </View>
         </View>
-    );
+      </View>
+    </TouchableOpacity>
+  );
 };
 
 export default BlogCard;
 
 const styles = StyleSheet.create({
-    cardContainer: {
-        width: window.width - 90,
-        position: 'relative',
-        alignItems: 'center',
-    },
-    imageStyle: {
-        borderWidth: 1,
-        borderRadius: 4,
-        borderColor: '#d1d1d1',
-        width: '100%',
-        aspectRatio: 7 / 6,
-        marginBottom: 12,
-    },
-    blogContent: {
-        position: 'absolute',
-        left: 0,
-        right: 0,
-        zIndex: 1,
-        padding: 8,
-        backgroundColor: '#f1f1f1',
-        margin: 1,
-        marginTop: 0,
-        borderBottomLeftRadius: 4,
-        borderBottomRightRadius: 4,
-    },
-    label: {
-        fontSize: 12,
-        fontWeight: '400',
-        color: 'black',
-    },
-    buttonContainerStyle: {
-        width: 'auto',
-    },
+  cardContainer: {
+    width: window.width - 90,
+    alignItems: 'center',
+  },
+  cardContainerInner: {
+    position: 'relative',
+    borderWidth: 1,
+    borderRadius: 4,
+    borderColor: '#d1d1d1',
+    overflow: 'hidden',
+  },
+  imageStyle: {
+    width: '100%',
+    aspectRatio: 7 / 6,
+    marginBottom: 12,
+  },
+  blogContent: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 1,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    backgroundColor: '#f1f1f1',
+  },
+  label: {
+    fontSize: FontSize.s14,
+    fontWeight: Weight.W600,
+    color: Colors.black,
+  },
+  buttonContainerStyle: {
+    width: 'auto',
+  },
 });

@@ -5,11 +5,15 @@ import {
   StatusBar,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from 'react-native';
 import React, {useState} from 'react';
 import {SafeAreaView} from 'react-native';
 import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
+import {useNavigation} from '@react-navigation/native';
+import Icon from 'react-native-vector-icons/Ionicons';
+import {Colors} from '../utils/styles';
 
 const MainScreen = ({
   isHomeScreen = false,
@@ -23,6 +27,7 @@ const MainScreen = ({
   children = <></>,
   userDetails = {},
 }) => {
+  const navigation = useNavigation();
   const [index, setIndex] = useState(0);
   const routes = headerFloatingView
     ? headerFloatingView?.map((tab, i) => ({
@@ -42,7 +47,7 @@ const MainScreen = ({
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
-      <StatusBar backgroundColor={'#333'} barStyle={'light-content'}/>
+      <StatusBar backgroundColor={'#333'} barStyle={'light-content'} />
       <View style={styles.mainContainer}>
         {showHeader && (
           <View
@@ -64,7 +69,15 @@ const MainScreen = ({
                     </Text>
                   </View>
                 ) : (
-                  headerLeft
+                  <TouchableOpacity onPress={() => navigation.goBack()}>
+                    <View style={styles.iconContainerStyle}>
+                      <Icon
+                        name="chevron-back-outline"
+                        size={20}
+                        color={Colors.white}
+                      />
+                    </View>
+                  </TouchableOpacity>
                 )}
               </View>
             )}
@@ -92,7 +105,6 @@ const MainScreen = ({
                 width: Dimensions.get('window').width,
               }}
               renderTabBar={props => {
-                console.log(props, 'props');
                 return (
                   <TabBar
                     {...props}
@@ -144,6 +156,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
+  },
+  iconContainerStyle: {
+    padding: 6,
+    paddingLeft: 0,
   },
   welcomeText: {
     fontSize: 14,
