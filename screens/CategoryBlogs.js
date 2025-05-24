@@ -18,8 +18,6 @@ const CategoryBlogs = () => {
   const route = useRoute();
   const {categoryId} = route.params || '';
 
-  console.log(categoryId, 'categoryId');
-
   useEffect(() => {
     const getCategoryBlogs = async () => {
       try {

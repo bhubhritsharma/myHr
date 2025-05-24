@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 // /* eslint-disable react/no-unstable-nested-components */
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {getAuth} from '@react-native-firebase/auth';
 import {
   StackActions,
@@ -26,6 +26,7 @@ const HomeScreen = () => {
   const navigation = useNavigation();
   const [categoriesData, setCategoriesData] = useState(null);
   const [blogsData, setBlogsData] = useState(null);
+  const [userDetails, setUserDetails] = useState(null);
 
   useFocusEffect(
     useCallback(() => {
@@ -34,10 +35,23 @@ const HomeScreen = () => {
     }, []),
   );
 
+  useEffect(() => {
+    fetchUser();
+  }, []);
+
+  const fetchUser = async () => {
+    const snapshot = await getDocs(collection(db, 'users'));
+    const currentUid = getAuth().currentUser?.uid;
+    const userData = snapshot.docs.find(doc => doc.data().uid === currentUid);
+    if (userData) {
+      setUserDetails(userData.data());
+    }
+  };
+
   const getCategoriesData = async () => {
     try {
       const snapshot = await getDocs(collection(db, 'categories'));
-      const formattedCategoriesData = snapshot?._docs?.map(item => {
+      const formattedCategoriesData = snapshot.docs?.map(item => {
         return {
           id: item?.id,
           ...item?._data,
@@ -52,7 +66,7 @@ const HomeScreen = () => {
   const getBlogsData = async () => {
     try {
       const snapshot = await getDocs(collection(db, 'blogs'));
-      const formattedBlogsData = snapshot?._docs?.map(item => {
+      const formattedBlogsData = snapshot?.docs?.map(item => {
         return {
           id: item?.id,
           ...item?._data,
@@ -96,7 +110,7 @@ const HomeScreen = () => {
   return (
     <MainScreen
       isHomeScreen={true}
-      userDetails={getAuth()?.currentUser}
+      userDetails={userDetails}
       headerRight={
         <MyButton
           title="Sign Out"

@@ -36,6 +36,8 @@ const MainScreen = ({
       }))
     : [];
 
+  console.log(userDetails, 'user details in main screen');
+
   const renderScene = headerFloatingView?.length
     ? SceneMap(
         headerFloatingView?.reduce((acc, tab, i) => {
@@ -65,7 +67,7 @@ const MainScreen = ({
                   <View>
                     <Text style={styles.welcomeText}>Welcome</Text>
                     <Text style={styles.userName}>
-                      {userDetails?.email?.split('@')[0]}
+                      {userDetails?.firstName ?? 'User'}
                     </Text>
                   </View>
                 ) : (

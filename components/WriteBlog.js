@@ -66,7 +66,6 @@ const WriteBlog = () => {
       setSelectedCategoryId('');
     }, 1000);
     console.log('Form Submitted:', formData);
-
     Alert.alert('Success', 'Form submitted!');
   };
 
