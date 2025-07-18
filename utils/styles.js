@@ -2,6 +2,14 @@ export const Colors = {
   black: '#000',
   white: '#fff',
   red: 'rgb(255,0,0)',
+  sectionBGDark: '#333',
+  sectionBGLight: '#E4E4E4',
+  screenBGDark: '#1E1E1E',
+  screenBGLight: '#FAF9F6',
+  textDark: '#CCCCCC',
+  textLight: '#1E1E1E',
+  buttonBGDark: '#F2B5B5',
+  buttonBGLight: '#FFE9DE',
 };
 
 export const FontSize = {

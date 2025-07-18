@@ -1,22 +1,23 @@
 /* eslint-disable react/no-unstable-nested-components */
-import {ScrollView, StyleSheet} from 'react-native';
-import React, {useEffect, useState} from 'react';
+import { ScrollView } from 'react-native';
+import React, { useEffect, useState } from 'react';
 import MainScreen from '../components/MainScreen';
-import {Text} from '@react-navigation/elements';
-import {globalStyle} from '../utils/styles';
+import { Text } from '@react-navigation/elements';
+import { globalStyle } from '../utils/styles';
 import {
   getFirestore,
   getDocs,
   collection,
 } from '@react-native-firebase/firestore';
-import {useRoute} from '@react-navigation/native';
+import { useRoute } from '@react-navigation/native';
+import Title from '../components/Title';
 
 const db = getFirestore();
 
 const CategoryBlogs = () => {
   const [categoryBlogs, setCategoryBlogs] = useState([]);
   const route = useRoute();
-  const {categoryId} = route.params || '';
+  const { categoryId } = route.params || '';
 
   useEffect(() => {
     const getCategoryBlogs = async () => {
@@ -42,14 +43,14 @@ const CategoryBlogs = () => {
 
   const AllCategoriesTab = () => (
     <ScrollView contentContainerStyle={globalStyle.contentContainerStyle}>
-      <Text>Dashboard Content</Text>
+      <Title title={'Dashboard Content'} />
     </ScrollView>
   );
 
   const FavouritesTab = () => (
     <ScrollView contentContainerStyle={globalStyle.contentContainerStyle}>
       {categoryBlogs.map(blog => (
-        <Text key={blog.id}>Blog ID: {blog?.title}</Text>
+        <Title title={'Blog ID:' + blog?.title} />
       ))}
     </ScrollView>
   );
@@ -72,5 +73,3 @@ const CategoryBlogs = () => {
 };
 
 export default CategoryBlogs;
-
-const styles = StyleSheet.create({});

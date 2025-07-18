@@ -6,15 +6,16 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import MainScreen from './MainScreen';
-import {Picker} from '@react-native-picker/picker';
+import { Picker } from '@react-native-picker/picker';
 import MyButton from './MyButton';
 import {
   getFirestore,
   collection,
   getDocs,
 } from '@react-native-firebase/firestore';
+import Title from './Title';
 // import {getStorage, ref} from '@react-native-firebase/storage';
 
 const db = getFirestore();
@@ -74,7 +75,7 @@ const WriteBlog = () => {
   return (
     <MainScreen title="Write a blog">
       <ScrollView contentContainerStyle={styles.container}>
-        <Text style={styles.label}>What is it about ?</Text>
+        <Title title={'What is it about ?'} style={styles.label} />
         <TextInput
           value={title}
           onChangeText={setTitle}
@@ -83,7 +84,7 @@ const WriteBlog = () => {
           placeholderTextColor={'#9c9c9c'}
         />
 
-        <Text style={styles.label}>Category</Text>
+        <Title title={'Category'} style={styles.label} />
         <View style={styles.pickerWrapper}>
           <Picker
             selectedValue={selectedCategoryId}
@@ -105,7 +106,7 @@ const WriteBlog = () => {
           </Picker>
         </View>
 
-        <Text style={styles.label}>Content (max 10000 characters)</Text>
+        <Title title={'Content (max 10000 characters)'} style={styles.label} />
         <TextInput
           value={content}
           onChangeText={text => {

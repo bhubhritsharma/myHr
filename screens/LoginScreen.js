@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   View,
   TextInput,
@@ -6,9 +6,10 @@ import {
   Text,
   Dimensions,
   StatusBar,
+  ToastAndroid,
 } from 'react-native';
-import {getAuth, signInWithEmailAndPassword} from '@react-native-firebase/auth';
-import {StackActions, useNavigation} from '@react-navigation/native';
+import { getAuth, signInWithEmailAndPassword } from '@react-native-firebase/auth';
+import { StackActions, useNavigation } from '@react-navigation/native';
 import MainScreen from '../components/MainScreen';
 import MyButton from '../components/MyButton';
 
@@ -38,6 +39,7 @@ function LoginScreen() {
           }),
         );
         console.log(isUserLoggedIn, 'user');
+        ToastAndroid.show('Welcome to myHr', ToastAndroid.SHORT);
       } else {
         setMessage('Email and password cannot be empty');
       }

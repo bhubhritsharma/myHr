@@ -1,27 +1,41 @@
-import {StyleSheet, Text, TouchableOpacity} from 'react-native';
 import React from 'react';
+import { StyleSheet, TouchableOpacity } from 'react-native';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import Title from './Title';
+import { Colors } from '../utils/styles';
 
 const MyButton = ({
   title = 'OK',
-  onPress = () => {},
+  onPress = () => { },
   buttonContainerStyle = {},
   buttonTextStyle = {},
   buttonType = 'primary',
   isSignOutBtn = false,
+  isIconButton = false,
+  iconName = 'checkmark',
+  iconSize = 20,
+  iconColor = '#000',
 }) => {
   return (
-    <TouchableOpacity
-      onPress={onPress}
-      style={[
-        buttonContainerStyle,
-        isSignOutBtn
-          ? styles.signOutBtn
-          : buttonType === 'primary'
-          ? styles.containerStyle1
-          : styles.containerStyle2,
-      ]}>
-      <Text style={[buttonTextStyle, styles.textStyle]}>{title}</Text>
-    </TouchableOpacity>
+    <>
+      {isIconButton ?
+        <TouchableOpacity onPress={onPress} style={styles.iconButton}>
+          <Ionicons name={iconName} size={iconSize} color={iconColor} />
+        </TouchableOpacity> :
+        <TouchableOpacity
+          onPress={onPress}
+          style={[
+            isSignOutBtn
+              ? styles.signOutBtn
+              : buttonType === 'primary'
+                ? styles.containerStyle1
+                : styles.containerStyle2,
+            buttonContainerStyle,
+          ]}>
+          <Title title={title} style={[styles.textStyle, buttonTextStyle]} />
+        </TouchableOpacity>
+      }
+    </>
   );
 };
 
@@ -35,7 +49,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     textAlign: 'center',
-    backgroundColor: '#d1d1d1',
+    backgroundColor: Colors.buttonBGDark,
     borderRadius: 4,
   },
   containerStyle1: {
@@ -45,7 +59,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     textAlign: 'center',
-    backgroundColor: '#d1d1d1',
+    backgroundColor: '#A8D5BA',
     borderRadius: 4,
   },
   containerStyle2: {

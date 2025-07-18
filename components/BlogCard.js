@@ -2,29 +2,29 @@ import {
   Dimensions,
   Image,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from 'react-native';
 import React from 'react';
-import {addDot} from '../utils/methods';
-import {Colors, FontSize, Weight} from '../utils/styles';
-import {useNavigation} from '@react-navigation/native';
+import { addDot } from '../utils/methods';
+import { Colors, FontSize, Weight } from '../utils/styles';
+import { useNavigation } from '@react-navigation/native';
+import Title from './Title';
 
 const window = Dimensions.get('window');
 
-const BlogCard = ({cardContainerStyle = {}, item = {}}) => {
+const BlogCard = ({ cardContainerStyle = {}, item = {} }) => {
   const navigation = useNavigation();
 
   return (
     <TouchableOpacity
-      onPress={() => navigation.navigate('Blog Details', {id: item?.id})}>
+      onPress={() => navigation.navigate('Blog Details', { id: item?.id })}>
       <View style={[styles.cardContainer, cardContainerStyle]}>
         <View style={styles.cardContainerInner}>
-          <Image style={styles.imageStyle} src={item?.url} />
+          <Image style={styles.imageStyle} source={require('../images/sample1.jpg')} />
           <View style={[styles.blogContent]}>
-            <Text style={styles.label}>{item?.title}</Text>
-            <Text style={styles.description}>{addDot(item?.content, 80)}</Text>
+            <Title title={item?.title} style={styles.label} />
+            <Title title={addDot(item?.content, 40)} style={styles.description} />
           </View>
         </View>
       </View>
@@ -48,8 +48,10 @@ const styles = StyleSheet.create({
   },
   imageStyle: {
     width: '100%',
+    height: 'auto',
     aspectRatio: 7 / 6,
     marginBottom: 12,
+    objectFit: 'cover',
   },
   blogContent: {
     position: 'absolute',
@@ -64,6 +66,10 @@ const styles = StyleSheet.create({
   label: {
     fontSize: FontSize.s14,
     fontWeight: Weight.W600,
+    color: Colors.black,
+  },
+  description: {
+    fontSize: FontSize.s13,
     color: Colors.black,
   },
   buttonContainerStyle: {

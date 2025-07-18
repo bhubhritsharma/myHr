@@ -4,16 +4,17 @@ import {
   FlatList,
   StatusBar,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useState} from 'react';
-import {SafeAreaView} from 'react-native';
-import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
-import {useNavigation} from '@react-navigation/native';
+import React, { useContext, useState } from 'react';
+import { SafeAreaView } from 'react-native';
+import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
+import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {Colors} from '../utils/styles';
+import { Colors, FontSize } from '../utils/styles';
+import { ThemeContext } from './ThemeProvider';
+import Title from './Title';
 
 const MainScreen = ({
   isHomeScreen = false,
@@ -27,30 +28,29 @@ const MainScreen = ({
   children = <></>,
   userDetails = {},
 }) => {
+  const { isDark } = useContext(ThemeContext);
   const navigation = useNavigation();
   const [index, setIndex] = useState(0);
   const routes = headerFloatingView
     ? headerFloatingView?.map((tab, i) => ({
-        key: `tab-${i}`,
-        title: tab?.tabName,
-      }))
+      key: `tab-${i}`,
+      title: tab?.tabName,
+    }))
     : [];
-
-  console.log(userDetails, 'user details in main screen');
 
   const renderScene = headerFloatingView?.length
     ? SceneMap(
-        headerFloatingView?.reduce((acc, tab, i) => {
-          acc[`tab-${i}`] = tab.components;
-          return acc;
-        }, {}),
-      )
+      headerFloatingView?.reduce((acc, tab, i) => {
+        acc[`tab-${i}`] = tab.components;
+        return acc;
+      }, {}),
+    )
     : null;
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
-      <StatusBar backgroundColor={'#333'} barStyle={'light-content'} />
-      <View style={styles.mainContainer}>
+      <StatusBar backgroundColor={isDark ? Colors.sectionBGDark : Colors.sectionBGLight} barStyle={isDark ? 'light-content' : 'dark-content'} />
+      <View style={[styles.mainContainer, { backgroundColor: isDark ? Colors.screenBGDark : Colors.screenBGLight }]}>
         {showHeader && (
           <View
             style={[
@@ -58,17 +58,16 @@ const MainScreen = ({
               {
                 borderBottomLeftRadius: headerFloatingView ? 0 : 8,
                 borderBottomRightRadius: headerFloatingView ? 0 : 8,
+                backgroundColor: isDark ? Colors.sectionBGDark : Colors.sectionBGLight,
               },
             ]}>
             {showHeaderLeft && (
               <View
-                style={[styles.headerLeft, {flex: isHomeScreen ? 0.5 : 0.15}]}>
+                style={[styles.headerLeft, { flex: isHomeScreen ? 0.5 : 0.15 }]}>
                 {isHomeScreen ? (
                   <View>
-                    <Text style={styles.welcomeText}>Welcome</Text>
-                    <Text style={styles.userName}>
-                      {userDetails?.firstName ?? 'User'}
-                    </Text>
+                    <Title title={'Welcome'} style={styles.welcomeText} />
+                    <Title title={userDetails?.firstName ?? 'User'} style={styles.userName} />
                   </View>
                 ) : (
                   <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -76,7 +75,7 @@ const MainScreen = ({
                       <Icon
                         name="chevron-back-outline"
                         size={20}
-                        color={Colors.white}
+                        color={isDark ? Colors.textDark : Colors.textLight}
                       />
                     </View>
                   </TouchableOpacity>
@@ -85,22 +84,22 @@ const MainScreen = ({
             )}
             {!isHomeScreen && (
               <View style={styles.headerCenter}>
-                <Text style={styles.pageTitle}>{title}</Text>
+                <Title title={title} style={styles.pageTitle} />
               </View>
             )}
             {showHeaderRight && (
               <View
-                style={[styles.headerRight, {flex: isHomeScreen ? 0.5 : 0.15}]}>
+                style={[styles.headerRight, { flex: isHomeScreen ? 0.5 : 0.15 }]}>
                 {headerRight}
               </View>
             )}
           </View>
         )}
         {headerFloatingView && (
-          <View style={{flex: 1}}>
+          <View style={{ flex: 1 }}>
             <TabView
               style={styles.tabsViewStyle}
-              navigationState={{index, routes}}
+              navigationState={{ index, routes }}
               renderScene={renderScene}
               onIndexChange={setIndex}
               initialLayout={{
@@ -110,9 +109,11 @@ const MainScreen = ({
                 return (
                   <TabBar
                     {...props}
-                    indicatorStyle={styles.indicatorStyle}
-                    style={styles.tabsContainer}
-                    labelStyle={styles.tabsLabel}
+                    indicatorStyle={[styles.indicatorStyle, { backgroundColor: isDark ? Colors.sectionBGLight : Colors.sectionBGDark }]}
+                    style={[styles.tabsContainer, { backgroundColor: isDark ? Colors.sectionBGDark : Colors.sectionBGLight }]}
+                    tabStyle={styles.tabsLabel}
+                    activeColor={isDark ? Colors.textDark : Colors.textLight}
+                    inactiveColor={isDark ? Colors.textDark : Colors.textLight}
                   />
                 );
               }}
@@ -120,7 +121,7 @@ const MainScreen = ({
           </View>
         )}
         {!headerFloatingView && (
-          <View style={styles.mainContent}>
+          <View style={[styles.mainContent, { backgroundColor: isDark ? '#1E1E1E' : '#FAF9F6' }]}>
             <FlatList
               renderItem={() => children}
               nestedScrollEnabled
@@ -142,7 +143,8 @@ const styles = StyleSheet.create({
   },
   mainContainer: {
     flex: 1,
-    backgroundColor: '#e6e6e6',
+    backgroundColor: '#1E1E1E',
+    // backgroundColor: isDark ? '#FAF9F6' : '#1E1E1E',
     // height: Dimensions.get('window').height,
     // overflow: 'scroll',
   },
@@ -164,14 +166,12 @@ const styles = StyleSheet.create({
     paddingLeft: 0,
   },
   welcomeText: {
-    fontSize: 14,
+    fontSize: FontSize.s14,
     fontWeight: '400',
-    color: 'white',
   },
   userName: {
-    fontSize: 15,
+    fontSize: FontSize.s15,
     fontWeight: '400',
-    color: 'white',
     textTransform: 'capitalize',
   },
   headerCenter: {
@@ -181,9 +181,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   pageTitle: {
-    fontSize: 18,
+    fontSize: FontSize.s18,
     fontWeight: 600,
-    color: '#fff',
   },
   headerRight: {
     flexDirection: 'row',
@@ -194,7 +193,6 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   tabsContainer: {
-    backgroundColor: '#333',
     borderTopWidth: 1,
     borderTopColor: '#d1d1d1',
     borderBottomLeftRadius: 8,

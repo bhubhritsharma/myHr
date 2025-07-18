@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   Alert,
   Dimensions,
@@ -8,13 +8,14 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  ToastAndroid,
 } from 'react-native';
 import {
   getAuth,
   createUserWithEmailAndPassword,
 } from '@react-native-firebase/auth';
-import {getFirestore} from '@react-native-firebase/firestore';
-import {useNavigation} from '@react-navigation/native';
+import { getFirestore } from '@react-native-firebase/firestore';
+import { useNavigation } from '@react-navigation/native';
 import MainScreen from '../components/MainScreen';
 import MyButton from '../components/MyButton';
 
@@ -30,77 +31,48 @@ const SignUpScreen = () => {
 
   const navigation = useNavigation();
 
-  // const isValidPassword = p => {
-  //   const regex =
-  //     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?!.*(.)\1{2})[A-Za-z\d]{8,}$/;
-  //   return regex.test(p);
-  // };
-
-  // const handleSignUp = async () => {
-  //   try {
-  //     if (email.length > 0 && password.length > 0) {
-  //       const isUserCreated = await createUserWithEmailAndPassword(
-  //         getAuth(),
-  //         email,
-  //         password,
-  //       );
-  //       const {user} = isUserCreated;
-  //       setMessage('');
-
-  //       const userData = {
-  //         uid: user.uid,
-  //         firstName: firstName,
-  //         lastName: lastName,
-  //         email: user.email,
-  //         createdAt: new Date(),
-  //       };
-  //       await db.collection('users').add(userData);
-  //       Alert.alert('Success', 'Account has been created successfully', [
-  //         {text: 'OK', onPress: () => navigation.navigate('Login')},
-  //       ]);
-  //     } else {
-  //       setMessage('Email or Password cannot be empty');
-  //     }
-  //   } catch (error) {
-  //     console.error(error, 'error');
-  //     setMessage(error.message);
-  //   }
-  // };
+  const isValidPassword = p => {
+    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
+    return regex.test(p);
+  };
 
   const handleSignUp = async () => {
     try {
-      if (email.length > 0 && password.length > 0) {
-        const isUserCreated = await createUserWithEmailAndPassword(
-          getAuth(),
-          email,
-          password,
-        );
-        const {user} = isUserCreated;
-
-        setMessage('');
-
-        const userData = {
-          uid: user.uid,
-          firstName: firstName,
-          lastName: lastName,
-          email: user.email,
-          createdAt: new Date(),
-        };
-
-        try {
-          await db.collection('users').add(userData);
-
-          Alert.alert('Success', 'Account has been created successfully', [
-            {text: 'OK', onPress: () => navigation.navigate('Login')},
-          ]);
-        } catch (firestoreError) {
-          console.error('Failed to save user data:', firestoreError);
-          await user.delete();
-          setMessage('Signup failed. Please try again.');
-        }
-      } else {
+      if (email.length === 0 && password.length === 0) {
         setMessage('Email or Password cannot be empty');
+        return;
       }
+
+      if (!isValidPassword(password)) {
+        Alert.alert('Alert', 'Password must be at least 8 characters, include upper and lower case letters, a number, and no more than 2 repeating characters.', [{ text: 'OK' }]);
+        return;
+      }
+
+      const isUserCreated = await createUserWithEmailAndPassword(
+        getAuth(),
+        email,
+        password,
+      );
+
+      const { user } = isUserCreated;
+      setMessage('');
+      const userData = {
+        uid: user.uid,
+        firstName: firstName,
+        lastName: lastName,
+        email: user.email,
+        createdAt: new Date(),
+      };
+
+      try {
+        await db.collection('users').add(userData);
+        ToastAndroid.show('Welcome to myHr', ToastAndroid.SHORT);
+      } catch (firestoreError) {
+        console.error('Failed to save user data:', firestoreError);
+        await user.delete();
+        setMessage('Signup failed. Please try again.');
+      }
+
     } catch (error) {
       console.error(error, 'Signup error');
       setMessage(error.message);

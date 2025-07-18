@@ -1,20 +1,21 @@
-import {StyleSheet, Text, View} from 'react-native';
-import React, {useCallback, useState} from 'react';
+import { StyleSheet, View } from 'react-native';
+import React, { useCallback, useState } from 'react';
 import {
   getFirestore,
   collection,
   getDocs,
 } from '@react-native-firebase/firestore';
 import MainScreen from '../components/MainScreen';
-import {addDot} from '../utils/methods';
-import {useFocusEffect, useRoute} from '@react-navigation/native';
-import {Colors, FontSize, globalStyle, Weight} from '../utils/styles';
+import { addDot } from '../utils/methods';
+import { useFocusEffect, useRoute } from '@react-navigation/native';
+import { FontSize, globalStyle, Weight } from '../utils/styles';
+import Title from '../components/Title';
 
 const db = getFirestore();
 
 const BlogDetail = () => {
   const route = useRoute();
-  const {id} = route.params || '';
+  const { id } = route.params || '';
   const [blogData, setBlogData] = useState(null);
 
   console.log(id, 'passedId');
@@ -45,8 +46,8 @@ const BlogDetail = () => {
       <View style={globalStyle.contentContainerStyle}>
         {blogData && (
           <View key={blogData?.id}>
-            <Text style={styles.label}>{blogData?.title}</Text>
-            <Text>{blogData?.content}</Text>
+            <Title title={blogData?.title} style={styles.label} />
+            <Title title={blogData?.content} style={styles.content} />
           </View>
         )}
       </View>
@@ -60,6 +61,10 @@ const styles = StyleSheet.create({
   label: {
     fontSize: FontSize.s18,
     fontWeight: Weight.W600,
-    color: Colors.black,
+    marginBottom: 6,
+  },
+  content: {
+    fontSize: FontSize.s16,
+    fontWeight: Weight.W400,
   },
 });

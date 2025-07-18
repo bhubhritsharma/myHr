@@ -1,5 +1,7 @@
-import {StyleSheet, Text, View} from 'react-native';
-import React from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import React, { useContext } from 'react';
+import { Colors } from '../utils/styles';
+import { ThemeContext } from './ThemeProvider';
 
 const SectionHeading = ({
   heading = '',
@@ -8,11 +10,12 @@ const SectionHeading = ({
   headingTextStyle = {},
   smallTextStyle = {},
 }) => {
+  const { isDark } = useContext(ThemeContext);
   return (
-    <View style={[headingContainerStyle, styles.containerStyle]}>
-      <Text style={[headingTextStyle, styles.textStyle]}>{heading}</Text>
+    <View style={[styles.containerStyle, headingContainerStyle]}>
+      <Text style={[styles.textStyle, headingTextStyle, { color: isDark ? Colors.textDark : Colors.textLight }]}>{heading}</Text>
       {smallHeading && (
-        <Text style={[smallTextStyle, styles.smallTextStyle]}>
+        <Text style={[styles.smallTextStyle, smallTextStyle, { color: isDark ? Colors.textDark : Colors.textLight }]}>
           {smallHeading}
         </Text>
       )}
@@ -29,12 +32,10 @@ const styles = StyleSheet.create({
   textStyle: {
     fontSize: 18,
     fontWeight: '600',
-    color: 'black',
   },
   smallTextStyle: {
     fontSize: 14,
     fontWeight: '400',
-    color: 'black',
     marginTop: 5,
   },
 });

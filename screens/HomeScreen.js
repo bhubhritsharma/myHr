@@ -1,7 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 // /* eslint-disable react/no-unstable-nested-components */
-import React, {useCallback, useEffect, useState} from 'react';
-import {getAuth} from '@react-native-firebase/auth';
+import React, { useCallback, useEffect, useState } from 'react';
+import { getAuth } from '@react-native-firebase/auth';
 import {
   StackActions,
   useFocusEffect,
@@ -9,7 +9,7 @@ import {
 } from '@react-navigation/native';
 import MainScreen from '../components/MainScreen';
 import MyButton from '../components/MyButton';
-import {FlatList, View} from 'react-native';
+import { FlatList, StyleSheet, View } from 'react-native';
 import SectionHeading from '../components/SectionHeading';
 import CategoryCard from '../components/CategoryCard';
 import BlogCard from '../components/BlogCard';
@@ -18,7 +18,9 @@ import {
   collection,
   getDocs,
 } from '@react-native-firebase/firestore';
-import {globalStyle} from '../utils/styles';
+import { globalStyle } from '../utils/styles';
+import ThemeSwitcher from '../components/ThemeSwitcher';
+import SectionContainer from '../components/SectionContainer';
 
 const db = getFirestore();
 
@@ -112,49 +114,54 @@ const HomeScreen = () => {
       isHomeScreen={true}
       userDetails={userDetails}
       headerRight={
-        <MyButton
-          title="Sign Out"
-          onPress={handleSignOut}
-          isSignOutBtn={true}
-        />
+        <>
+          <MyButton
+            title="Sign Out"
+            onPress={handleSignOut}
+            isSignOutBtn={true}
+            buttonContainerStyle={styles.buttonContainerStyle}
+          />
+          <ThemeSwitcher />
+        </>
       }
-      // headerFloatingView={[
-      //   {
-      //     tabName: 'Dashboard',
-      //     components: DashboardTab,
-      //   },
-      //   {
-      //     tabName: 'Profile',
-      //     components: ProfileTab,
-      //   },
-      // ]}
+    // headerFloatingView={[
+    //   {
+    //     tabName: 'Dashboard',
+    //     components: DashboardTab,
+    //   },
+    //   {
+    //     tabName: 'Profile',
+    //     components: ProfileTab,
+    //   },
+    // ]}
     >
       <View style={globalStyle.contentContainerStyle}>
-        <View style={globalStyle.sectionContainer}>
+        <SectionContainer>
           <SectionHeading heading="Categories" />
           <FlatList
             horizontal
             scrollEnabled
             ItemSeparatorComponent={
-              <View style={{width: 12, height: '100%'}} />
+              <View style={{ width: 12, height: '100%' }} />
             }
             data={categoriesData}
-            renderItem={({item, index}) => renderCategoryCard(item)}
+            renderItem={({ item, index }) => renderCategoryCard(item)}
           />
-        </View>
-        <View style={globalStyle.sectionContainer}>
+
+        </SectionContainer>
+        <SectionContainer>
           <SectionHeading heading="Blogs" />
           <FlatList
             horizontal
             scrollEnabled
             ItemSeparatorComponent={
-              <View style={{width: 12, height: '100%'}} />
+              <View style={{ width: 12, height: '100%' }} />
             }
             data={blogsData}
-            renderItem={({item, index}) => renderBlogCard(item)}
+            renderItem={({ item, index }) => renderBlogCard(item)}
           />
-        </View>
-        <View style={globalStyle.sectionContainer}>
+        </SectionContainer>
+        <SectionContainer>
           <SectionHeading
             heading="Want to share your experience ???"
             smallHeading="Write it here..."
@@ -164,10 +171,16 @@ const HomeScreen = () => {
             buttonType="primary"
             onPress={() => navigation.navigate('Write Blog')}
           />
-        </View>
+        </SectionContainer>
       </View>
     </MainScreen>
   );
 };
 
 export default HomeScreen;
+
+const styles = StyleSheet.create({
+  buttonContainerStyle: {
+    marginRight: 8,
+  },
+});
